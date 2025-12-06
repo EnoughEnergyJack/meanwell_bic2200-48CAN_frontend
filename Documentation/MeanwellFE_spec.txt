@@ -1,0 +1,122 @@
+Here is a complete and concise summary of the PCB design in a structured document format:
+
+---
+
+## **Programmable Power Supply Front-End Controller – Design Summary**
+
+### **Overview**
+
+This design implements a front-end user interface and control board for a **Meanwell programmable power supply**, managed via **CAN bus** using an **Arduino microcontroller**. The interface provides user control over voltage and current settings, displays real-time feedback, and communicates settings to the power supply over CAN.
+
+---
+
+### **1. Functional Description**
+
+#### **Main Functions**:
+
+* Allow users to set and buffer **voltage (V)** and **current (I)** values.
+* Display real-time output values from the power supply.
+* Enable or disable the output via a control button.
+* Transmit buffered settings via CAN bus when prompted.
+
+---
+
+### **2. Major Components**
+
+#### **Microcontroller Unit (MCU)**
+
+* **Arduino-compatible board** with:
+
+  * Digital I/O lines for button and display interface
+  * CAN bus support via a CAN transceiver module (e.g., MCP2515)
+
+#### **Display**
+
+* **Character LCD** with **parallel interface** (likely HD44780-compatible)
+
+  * Controlled via 4-bit mode (RS, E, D4–D7)
+  * Displays:
+
+    * Voltage and current setpoints (`Vset`, `Iset`)
+    * Buffered values (`Vbuf`, `Ibuf`)
+    * Output readings (`Vout`, `Iout`)
+    * Output state (`OP: 1` for ON)
+
+#### **User Input Controls**
+
+* **Two rocker switches**:
+
+  * One for **voltage** adjustment (V+ / V−)
+  * One for **current** adjustment (I+ / I−)
+* **Two pushbuttons**:
+
+  * `Set Buf`: Sends buffered values to the power supply
+  * `OP On/Off`: Toggles power output state
+
+#### **CAN Interface**
+
+* Uses standard **CANH/CANL lines**
+* Powered via onboard **+5V** supply
+* Connected to Arduino via SPI-compatible CAN module
+
+---
+
+### **3. Power Supply**
+
+* Board is powered via **+5V** input
+* Onboard decoupling capacitors for voltage stability
+* Supports powering external components including display and CAN transceiver
+
+---
+
+### **4. Connectors**
+
+* **CAN Bus Output Connector**:
+
+  * CANH, CANL
+  * +5V and GND
+* **Optional headers** for debug or expansion
+
+---
+
+### **5. Signal Flow Summary**
+
+1. **User** adjusts V/I using rocker switches.
+2. Adjustments update buffer values (`Vbuf`, `Ibuf`), displayed on screen.
+3. **Set Buf** button transmits values to power supply via CAN.
+4. **Output button** toggles output enable/disable.
+5. Display updates all states and measurements dynamically.
+
+---
+
+### **6. Software Considerations**
+
+* Arduino firmware handles:
+
+  * Button debouncing and state management
+  * LCD control using `LiquidCrystal` library
+  * CAN bus communication using `MCP_CAN` library or equivalent
+  * Control logic for buffering and output toggling
+
+---
+
+### **7. Physical Layout**
+
+* **Compact PCB design** with:
+
+  * Front-facing display
+  * Top-mounted rocker and push buttons
+  * Rear or side connectors for CAN and power
+  * Through-hole and possibly SMD components for ease of assembly
+
+---
+
+### **Applications**
+
+* Laboratory power supply control
+* Remote-controlled power systems
+* Embedded development requiring voltage/current staging
+
+---
+
+Let me know if you’d like this turned into a PDF or if you want a matching Arduino sketch to go with this design.
