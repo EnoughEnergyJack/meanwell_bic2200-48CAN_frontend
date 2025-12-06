@@ -2,17 +2,13 @@
 
 A user-friendly front-end controller for Meanwell programmable power supplies, providing intuitive voltage and current control via rotary encoders, real-time monitoring, and CAN bus communication.
 
-## Overview
-
-This project implements a complete control interface for Meanwell power supplies using an Arduino-compatible microcontroller. The system provides dual display modes for configuration and monitoring, bidirectional current control, and comprehensive energy tracking capabilities.
-
 ## Features
 
-- **Dual Display Modes**
+- **Display Modes**
   - Main display: Real-time voltage, current, power, and energy monitoring
   - Limits display: Voltage and current setpoint configuration
   
-- **Intuitive Controls**
+- **Controls**
   - Rotary encoders for voltage (38-65V) and current (0-45A positive, -38A to 0A negative) adjustment
   - Dedicated buttons for output control, view switching, and setpoint confirmation
   
@@ -122,26 +118,6 @@ Default pin assignments (defined in `config.h`):
 
 For detailed user instructions, see [USER_GUIDE.md](USER_GUIDE.md).
 
-## Project Structure
-
-```
-meanwell_fe/
-├── Meanwell/
-│   ├── Meanwell.ino      # Main Arduino sketch
-│   ├── config.h          # Pin definitions and configuration
-│   ├── display.h/cpp     # LCD display management
-│   ├── inputs.h/cpp      # Button and encoder input handling
-│   └── can_comm.h/cpp    # CAN bus communication
-├── Documentation/
-│   ├── BIC-2200-E.pdf    # Power supply datasheet
-│   ├── CAN_Shield_Datasheet.pdf
-│   ├── Meanwell_FE v17.pdf
-│   ├── MEANWELL.dbc      # CAN bus DBC file
-│   └── MeanwellFE_spec.txt
-├── USER_GUIDE.md         # User manual
-└── README.md             # This file
-```
-
 ## Technical Details
 
 ### CAN Communication
@@ -151,8 +127,6 @@ meanwell_fe/
 - **CAN ID RX**: 0x800C0200 (responses from power supply)
 - **Protocol**: PMBus-compatible commands over CAN
 - **Mechanism**: Request-response pattern (see [CAN Messaging Protocol](Documentation/CAN_MESSAGING.md) for details)
-
-### Supported Commands
 
 - Voltage setpoint (CMD_VOUT_SET: 0x20)
 - Current setpoint (CMD_IOUT_SET: 0x30)
@@ -197,14 +171,6 @@ meanwell_fe/
 
 ## License
 
-[Specify your license here]
+MIT
 
-## Contributing
-
-[Add contribution guidelines if applicable]
-
-## Acknowledgments
-
-- Meanwell for power supply hardware and CAN protocol
-- Arduino community for libraries and support
 
