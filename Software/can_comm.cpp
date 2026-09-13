@@ -84,34 +84,53 @@ void checkOutputReal() {
     }
     toggle=!toggle;
     lastRequestTime = millis();
-    //delay(10);
   }
 
-  if (CAN.checkReceive() == CAN_MSGAVAIL) {
+  // Process ALL available messages
+  while (CAN.checkReceive() == CAN_MSGAVAIL) {
     unsigned long rxId;
     unsigned char len;
     unsigned char rxBuf[8];
     CAN.readMsgBuf(&rxId, &len, rxBuf);
-    canPacketsReceived++; // Increment packet counter
+    canPacketsReceived++;
+    
     if (rxId == CAN_ID_RX && len == 4) {
-      uint16_t command = (rxBuf[0]);
+      uint16_t command = (rxBuf[0]) | (rxBuf[1] << 8);
+      
+      Serial.print("CMD: 0x");
+      Serial.print(command, HEX);
+      
       switch (command) {
-        case CMD_READ_VOUT:
+        case CMD_READ_VOUT: {
           vOut = (rxBuf[3] << 8 | rxBuf[2]) * 0.01;
-          // Calculate power when voltage is updated
+          Serial.print(" -> VOUT: ");
+          Serial.println(vOut);
           float newPowerV = vOut * iOut;
-          filteredPower = 0.98f * filteredPower + 0.02f * newPowerV;
+          filteredPower = newPowerV;
           break;
-        case CMD_READ_IOUT:
+        }
+        case CMD_READ_IOUT: {
           iOut = (rxBuf[3] << 8 | rxBuf[2]) * 0.01;
-          // Calculate power when current is updated
+          Serial.print(" -> IOUT: ");
+          Serial.println(iOut);
           float newPowerI = vOut * iOut;
-          filteredPower = 0.98f * filteredPower + 0.02f * newPowerI;
+          filteredPower = newPowerI;
           break;
+        }
+        default: {
+          Serial.print(" -> Unknown command");
+          Serial.println();
+          break;
+        }
       }
-    }
-    while (CAN.checkReceive() == CAN_MSGAVAIL) {
-      CAN.readMsgBuf(&rxId, &len, rxBuf);
+    } else {
+      // Filter out the noise - only print if it's not one of the known other IDs
+      if (rxId != 0x421 && rxId != 0x720 && rxId != 0x722 && rxId != 0x723 && rxId != 0x725) {
+        Serial.print("Non-match: rxId=0x");
+        Serial.print(rxId, HEX);
+        Serial.print(" len=");
+        Serial.println(len);
+      }
     }
   }
 }
